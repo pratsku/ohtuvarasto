@@ -1,45 +1,42 @@
+
+"""Sisältää Varasto-luokan."""
+
+
 class Varasto:
-    def __init__(self, tilavuus, alku_saldo = 0):
-        if tilavuus > 0.0:
-            self.tilavuus = tilavuus
-        else:
-            # virheellinen, nollataan
-            self.tilavuus = 0.0
+    """Edustaa säilytystilaa."""
 
-        if alku_saldo < 0.0:
-            # virheellinen, nollataan
-            self.saldo = 0.0
-        elif alku_saldo <= tilavuus:
-            # mahtuu
-            self.saldo = alku_saldo
-        else:
-            # täyteen ja ylimäärä hukkaan!
-            self.saldo = tilavuus
+    def __init__(self, tilavuus, alku_saldo=0):
+        """Luo uuden varaston."""
+        self.tilavuus = max(0.0, tilavuus)
+        self.saldo = max(0.0, min(alku_saldo, self.tilavuus))
 
-    # huom: ominaisuus voidaan myös laskea. Ei tarvita erillistä kenttää viela_tilaa tms.
     def paljonko_mahtuu(self):
+        """Palauttaa varastossa olevan vapaan tilan."""
         return self.tilavuus - self.saldo
 
     def lisaa_varastoon(self, maara):
+        """Lisää varastoon tavaroita."""
         if maara < 0:
             return
-        if maara <= self.paljonko_mahtuu():
-            self.saldo = self.saldo + maara
-        else:
-            self.saldo = self.tilavuus
+
+        self.saldo = min(
+            self.saldo + maara,
+            self.tilavuus
+        )
 
     def ota_varastosta(self, maara):
+        """Ottaa varastosta tavaroita ja palauttaa otetun määrän."""
         if maara < 0:
             return 0.0
-        if maara > self.saldo:
-            kaikki_mita_voidaan = self.saldo
-            self.saldo = 0.0
 
-            return kaikki_mita_voidaan
+        saatiin = min(maara, self.saldo)
+        self.saldo -= saatiin
 
-        self.saldo = self.saldo - maara
-
-        return maara
+        return saatiin
 
     def __str__(self):
-        return f"saldo = {self.saldo}, vielä tilaa {self.paljonko_mahtuu()}"
+        """Palauttaa varaston tiedot merkkijonona."""
+        return (
+            f"saldo = {self.saldo}, "
+            f"vielä tilaa {self.paljonko_mahtuu()}"
+        )

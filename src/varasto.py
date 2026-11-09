@@ -38,5 +38,4 @@ class Varasto:
         """Palauttaa varaston tiedot merkkijonona."""
         return (
             f"saldo = {self.saldo}, "
-            f"vielä tilaa {self.paljonko_mahtuu()}"
-        )
+            f"vielä tilaa {self.paljonko_mahtuu()}")
